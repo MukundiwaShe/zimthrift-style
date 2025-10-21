@@ -21,6 +21,7 @@ import productShoes from "@/assets/product-shoes.jpg";
 const Products = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
+  const categoryParam = searchParams.get("category") || "";
   const [priceRange, setPriceRange] = useState([1, 50]);
 
   // Mock products data
@@ -82,13 +83,25 @@ const Products = () => {
   ];
 
   const filteredProducts = useMemo(() => {
-    if (!searchQuery) return products;
+    let filtered = products;
     
-    return products.filter((product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, products]);
+    // Filter by category
+    if (categoryParam) {
+      filtered = filtered.filter((product) =>
+        product.category.toLowerCase().includes(categoryParam.toLowerCase())
+      );
+    }
+    
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [searchQuery, categoryParam, products]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -98,11 +111,16 @@ const Products = () => {
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">
-            {searchQuery ? `Search Results for "${searchQuery}"` : "All Products"}
+            {searchQuery 
+              ? `Search Results for "${searchQuery}"` 
+              : categoryParam 
+                ? `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}'s Fashion`
+                : "All Products"
+            }
           </h1>
           <p className="text-muted-foreground">
-            {searchQuery 
-              ? `Found ${filteredProducts.length} items matching your search`
+            {searchQuery || categoryParam
+              ? `Found ${filteredProducts.length} items`
               : "Browse our collection of quality preloved fashion"
             }
           </p>
