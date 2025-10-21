@@ -15,10 +15,10 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-primary to-accent">
-              <span className="text-lg font-bold text-primary-foreground">OT</span>
+              <span className="text-lg font-bold text-primary-foreground">BS</span>
             </div>
             <span className="hidden text-xl font-bold text-foreground sm:inline-block">
-              Online Thrift Store
+              Bhero Store
             </span>
           </Link>
 

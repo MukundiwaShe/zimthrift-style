@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import StyleAssistant from "@/components/StyleAssistant";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -12,11 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-
-import productJacket from "@/assets/product-jacket.jpg";
-import productJeans from "@/assets/product-jeans.jpg";
-import productDress from "@/assets/product-dress.jpg";
-import productShoes from "@/assets/product-shoes.jpg";
+import { products } from "@/data/products";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
@@ -24,63 +21,6 @@ const Products = () => {
   const categoryParam = searchParams.get("category") || "";
   const [priceRange, setPriceRange] = useState([1, 50]);
 
-  // Mock products data
-  const products = [
-    {
-      id: "1",
-      name: "Vintage Denim Jacket",
-      price: 15,
-      image: productJacket,
-      condition: "Like New",
-      size: "M",
-      category: "jackets",
-    },
-    {
-      id: "2",
-      name: "Classic Blue Jeans",
-      price: 8,
-      image: productJeans,
-      condition: "Gently Used",
-      size: "32",
-      category: "jeans",
-    },
-    {
-      id: "3",
-      name: "Summer Coral Dress",
-      price: 12,
-      image: productDress,
-      condition: "Like New",
-      size: "S",
-      category: "dresses",
-    },
-    {
-      id: "4",
-      name: "White Sneakers",
-      price: 10,
-      image: productShoes,
-      condition: "Gently Used",
-      size: "8",
-      category: "shoes",
-    },
-    {
-      id: "5",
-      name: "Leather Jacket",
-      price: 25,
-      image: productJacket,
-      condition: "Like New",
-      size: "L",
-      category: "jackets",
-    },
-    {
-      id: "6",
-      name: "Black Jeans",
-      price: 10,
-      image: productJeans,
-      condition: "Good",
-      size: "30",
-      category: "jeans",
-    },
-  ];
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
@@ -109,21 +49,24 @@ const Products = () => {
 
       <main className="container mx-auto px-4 py-8">
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">
-            {searchQuery 
-              ? `Search Results for "${searchQuery}"` 
-              : categoryParam 
-                ? `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}'s Fashion`
-                : "All Products"
-            }
-          </h1>
-          <p className="text-muted-foreground">
-            {searchQuery || categoryParam
-              ? `Found ${filteredProducts.length} items`
-              : "Browse our collection of quality preloved fashion"
-            }
-          </p>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground mb-2">
+              {searchQuery 
+                ? `Search Results for "${searchQuery}"` 
+                : categoryParam 
+                  ? `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}'s Fashion`
+                  : "All Products"
+              }
+            </h1>
+            <p className="text-muted-foreground">
+              {searchQuery || categoryParam
+                ? `Found ${filteredProducts.length} items`
+                : "Browse our collection of 120+ quality preloved fashion items"
+              }
+            </p>
+          </div>
+          <StyleAssistant />
         </div>
 
         <div className="grid gap-8 lg:grid-cols-4">

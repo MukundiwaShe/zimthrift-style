@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "@/hooks/useCart";
 
 interface ProductCardProps {
   id: string;
@@ -15,6 +16,13 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ id, name, price, image, condition, size, category }: ProductCardProps) => {
+  const { addToCart, loading } = useCart();
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    await addToCart(id);
+  };
+
   return (
     <Card className="group overflow-hidden border-border hover:shadow-medium transition-all">
       <Link to={`/product/${id}`}>
@@ -57,12 +65,11 @@ const ProductCard = ({ id, name, price, image, condition, size, category }: Prod
         <Button
           className="w-full"
           size="sm"
-          onClick={() => {
-            // Add to cart logic
-          }}
+          onClick={handleAddToCart}
+          disabled={loading}
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
-          Add to Cart
+          {loading ? "Adding..." : "Add to Cart"}
         </Button>
       </CardFooter>
     </Card>

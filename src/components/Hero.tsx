@@ -22,8 +22,7 @@ const Hero = () => {
             Thrift smart, look fab
           </h1>
           <p className="text-xl text-background/90">
-            Fashion for everyone. Quality preloved clothing starting from just $1 USD.
-            Shop sustainably, dress stylishly.
+            No need to go to Mbare Mupedzanhamo and spend all day looking for cheap, affordable clothing. We've got you covered! Quality preloved fashion from just $1 USD.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link to="/products">
