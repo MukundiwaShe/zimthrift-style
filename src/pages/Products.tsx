@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -18,6 +19,8 @@ import productDress from "@/assets/product-dress.jpg";
 import productShoes from "@/assets/product-shoes.jpg";
 
 const Products = () => {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
   const [priceRange, setPriceRange] = useState([1, 50]);
 
   // Mock products data
@@ -78,6 +81,15 @@ const Products = () => {
     },
   ];
 
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery) return products;
+    
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, products]);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -85,8 +97,15 @@ const Products = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">All Products</h1>
-          <p className="text-muted-foreground">Browse our collection of quality preloved fashion</p>
+          <h1 className="text-4xl font-bold text-foreground mb-2">
+            {searchQuery ? `Search Results for "${searchQuery}"` : "All Products"}
+          </h1>
+          <p className="text-muted-foreground">
+            {searchQuery 
+              ? `Found ${filteredProducts.length} items matching your search`
+              : "Browse our collection of quality preloved fashion"
+            }
+          </p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-4">
@@ -172,7 +191,7 @@ const Products = () => {
           <div className="lg:col-span-3">
             <div className="mb-6 flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Showing {products.length} products
+                Showing {filteredProducts.length} products
               </p>
               <Select defaultValue="featured">
                 <SelectTrigger className="w-[180px]">
@@ -187,11 +206,17 @@ const Products = () => {
               </Select>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => (
-                <ProductCard key={product.id} {...product} />
-              ))}
-            </div>
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No products found matching your search.</p>
+              </div>
+            ) : (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} {...product} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>
