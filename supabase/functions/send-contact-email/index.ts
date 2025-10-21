@@ -1,7 +1,4 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@4.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,6 +19,11 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const { name, email, message }: ContactEmailRequest = await req.json();
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+    if (!RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not configured");
+    }
 
     // Validate inputs
     if (!email || !message) {
@@ -34,24 +36,37 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Send confirmation email to the user
-    const emailResponse = await resend.emails.send({
-      from: "Online Thrift Store <onboarding@resend.dev>",
-      to: [email],
-      subject: "We received your message!",
-      html: `
-        <h1>Thank you for contacting us${name ? `, ${name}` : ''}!</h1>
-        <p>We have received your message and will get back to you as soon as possible.</p>
-        <p><strong>Your message:</strong></p>
-        <p>${message}</p>
-        <br>
-        <p>Best regards,<br>Online Thrift Store Team</p>
-      `,
+    // Send email using Resend API directly
+    const emailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Online Thrift Store <onboarding@resend.dev>",
+        to: [email],
+        subject: "We received your message!",
+        html: `
+          <h1>Thank you for contacting us${name ? `, ${name}` : ''}!</h1>
+          <p>We have received your message and will get back to you as soon as possible.</p>
+          <p><strong>Your message:</strong></p>
+          <p>${message}</p>
+          <br>
+          <p>Best regards,<br>Online Thrift Store Team</p>
+        `,
+      }),
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    const emailData = await emailResponse.json();
 
-    return new Response(JSON.stringify(emailResponse), {
+    if (!emailResponse.ok) {
+      throw new Error(emailData.message || "Failed to send email");
+    }
+
+    console.log("Email sent successfully:", emailData);
+
+    return new Response(JSON.stringify(emailData), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
