@@ -1,7 +1,7 @@
 export const products = [
   // Women's Dresses
-  { id: "1", name: "Vintage Floral Summer Dress", price: 15, image: "/placeholder.svg", condition: "Excellent", size: "M", category: "women" },
-  { id: "2", name: "Black Cocktail Dress", price: 25, image: "/placeholder.svg", condition: "Like New", size: "S", category: "women" },
+  { id: "00000000-0000-0000-0000-000000000001", name: "Vintage Floral Summer Dress", price: 15, image: "/placeholder.svg", condition: "Excellent", size: "M", category: "women" },
+  { id: "00000000-0000-0000-0000-000000000002", name: "Black Cocktail Dress", price: 25, image: "/placeholder.svg", condition: "Like New", size: "S", category: "women" },
   { id: "3", name: "Maxi Boho Dress", price: 18, image: "/placeholder.svg", condition: "Good", size: "L", category: "women" },
   { id: "4", name: "Red A-Line Dress", price: 20, image: "/placeholder.svg", condition: "Excellent", size: "M", category: "women" },
   { id: "5", name: "Blue Wrap Dress", price: 16, image: "/placeholder.svg", condition: "Good", size: "S", category: "women" },
