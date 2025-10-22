@@ -153,7 +153,7 @@ const Index = () => {
             Join thousands of happy customers finding quality preloved fashion at unbeatable prices
           </p>
           <Link to="/products">
-            <Button variant="secondary" size="lg" className="shadow-strong">
+            <Button size="lg" className="shadow-strong bg-white text-primary hover:bg-white/90">
               Browse All Items
             </Button>
           </Link>

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,14 +7,53 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package, User, Heart, MapPin } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Account = () => {
-  // Mock user data (will be replaced with actual user state)
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "+263 77 123 4567",
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate("/auth");
+      } else {
+        setUser(user);
+      }
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out",
+        variant: "destructive",
+      });
+    } else {
+      navigate("/");
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          <p className="text-center text-muted-foreground">Loading...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   const orders = [
     {
@@ -50,20 +91,20 @@ const Account = () => {
                   <User className="h-8 w-8 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground">{user.name}</p>
-                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                  <p className="font-semibold text-foreground">{user?.user_metadata?.name || "User"}</p>
+                  <p className="text-sm text-muted-foreground">{user?.email}</p>
                 </div>
               </div>
               <div className="space-y-2 pt-4">
                 <div className="flex items-center text-sm">
                   <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span className="text-muted-foreground">{user.phone}</span>
+                  <span className="text-muted-foreground">{user?.user_metadata?.phone || "N/A"}</span>
                 </div>
               </div>
               <Button variant="outline" className="w-full">
                 Edit Profile
               </Button>
-              <Button variant="ghost" className="w-full text-destructive">
+              <Button variant="ghost" className="w-full text-destructive" onClick={handleSignOut}>
                 Sign Out
               </Button>
             </CardContent>

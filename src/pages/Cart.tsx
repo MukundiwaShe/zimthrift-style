@@ -4,29 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "@/hooks/useCart";
 
 const Cart = () => {
-  // Mock cart data (will be replaced with actual cart state)
-  const cartItems = [
-    {
-      id: "1",
-      name: "Vintage Denim Jacket",
-      price: 15,
-      image: "/placeholder.svg",
-      quantity: 1,
-      size: "M",
-    },
-    {
-      id: "2",
-      name: "Classic Blue Jeans",
-      price: 8,
-      image: "/placeholder.svg",
-      quantity: 2,
-      size: "32",
-    },
-  ];
+  const { cartItems, loading, updateQuantity, removeFromCart } = useCart();
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const delivery = 2;
   const total = subtotal + delivery;
 
@@ -66,32 +49,50 @@ const Cart = () => {
                 <CardContent className="p-4">
                   <div className="flex gap-4">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.image}
+                      alt={item.product.name}
                       className="h-24 w-24 rounded-md object-cover"
                     />
                     <div className="flex-1">
-                      <h3 className="font-semibold text-foreground">{item.name}</h3>
-                      <p className="text-sm text-muted-foreground">Size: {item.size}</p>
+                      <h3 className="font-semibold text-foreground">{item.product.name}</h3>
+                      <p className="text-sm text-muted-foreground">Size: {item.product.size}</p>
                       <div className="mt-2 flex items-center gap-4">
                         <div className="flex items-center gap-2 rounded-md border border-border">
-                          <Button size="icon" variant="ghost" className="h-8 w-8">
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="h-8 w-8"
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            disabled={loading}
+                          >
                             <Minus className="h-3 w-3" />
                           </Button>
                           <span className="w-8 text-center text-sm">{item.quantity}</span>
-                          <Button size="icon" variant="ghost" className="h-8 w-8">
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="h-8 w-8"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            disabled={loading}
+                          >
                             <Plus className="h-3 w-3" />
                           </Button>
                         </div>
-                        <Button size="icon" variant="ghost" className="text-destructive">
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="text-destructive"
+                          onClick={() => removeFromCart(item.id)}
+                          disabled={loading}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-primary">${item.price}</p>
+                      <p className="text-lg font-bold text-primary">${item.product.price}</p>
                       <p className="text-sm text-muted-foreground">
-                        Total: ${item.price * item.quantity}
+                        Total: ${item.product.price * item.quantity}
                       </p>
                     </div>
                   </div>

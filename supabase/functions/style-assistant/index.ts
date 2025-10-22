@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { searchQuery, size, bodyType } = await req.json();
+    const { searchQuery, size, bodyType, availableProducts } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
     if (!LOVABLE_API_KEY) {
@@ -35,7 +35,11 @@ serve(async (req) => {
           },
           {
             role: "user",
-            content: `A customer is looking for ${searchQuery} in size ${size} with a ${bodyType} body type. Provide 3-4 brief styling suggestions on how to wear this item, what to pair it with, and styling tips. Keep it under 150 words.`,
+            content: `A customer is looking for ${searchQuery} in size ${size} with a ${bodyType} body type. 
+            
+Available items in stock: ${availableProducts.map((p: any) => `${p.name} (${p.size}) - $${p.price}`).join(", ")}
+
+Provide 3-4 brief styling suggestions specifically using the available items in stock. Mention the actual product names and how to style them together. Keep it under 150 words.`,
           },
         ],
       }),
