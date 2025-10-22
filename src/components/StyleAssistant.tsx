@@ -8,6 +8,7 @@ import { Sparkles, Loader2, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/useCart";
 import Model3D from "./Model3D";
+import Image3DViewer from "./Image3DViewer";
 import { products } from "@/data/products";
 
 const StyleAssistant = () => {
@@ -167,17 +168,11 @@ const StyleAssistant = () => {
                 <Model3D bodyType={bodyType} />
               </div>
 
-              {/* AI Generated Image */}
+              {/* AI Generated Image in 3D */}
               {result.imageUrl && (
                 <div>
                   <h4 className="font-semibold text-lg mb-3">Style Inspiration</h4>
-                  <div className="rounded-lg overflow-hidden border">
-                    <img
-                      src={result.imageUrl}
-                      alt="Styling suggestion"
-                      className="w-full h-auto"
-                    />
-                  </div>
+                  <Image3DViewer imageUrl={result.imageUrl} alt="Styling suggestion" />
                 </div>
               )}
 
