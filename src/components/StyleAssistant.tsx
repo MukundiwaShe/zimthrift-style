@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Sparkles, Loader2, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/useCart";
-import Model3D from "./Model3D";
+
 import { products } from "@/data/products";
 
 const StyleAssistant = () => {
@@ -161,12 +161,6 @@ const StyleAssistant = () => {
 
           {result && (
             <div className="space-y-6 pt-4 border-t">
-              {/* 3D Model Visualization */}
-              <div>
-                <h4 className="font-semibold text-lg mb-3">3D Preview</h4>
-                <Model3D bodyType={bodyType} />
-              </div>
-
               {/* Style Inspiration */}
               {result.imageUrl && (
                 <div>
