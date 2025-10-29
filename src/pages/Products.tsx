@@ -59,7 +59,7 @@ const Products = () => {
     // Filter by category
     if (categoryParam) {
       filtered = filtered.filter((product) =>
-        product.category.toLowerCase().includes(categoryParam.toLowerCase())
+        product.category.toLowerCase() === categoryParam.toLowerCase()
       );
     }
     
