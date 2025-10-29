@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,8 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Sparkles, Loader2, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/hooks/useCart";
-
-import { products } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
 
 const StyleAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -16,6 +15,7 @@ const StyleAssistant = () => {
   const [size, setSize] = useState("");
   const [bodyType, setBodyType] = useState("");
   const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
   const [result, setResult] = useState<{ 
     stylingAdvice: string; 
     imageUrl: string | null;
@@ -23,6 +23,14 @@ const StyleAssistant = () => {
   } | null>(null);
   const { toast } = useToast();
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data } = await supabase.from("products").select("*");
+      if (data) setProducts(data);
+    };
+    fetchProducts();
+  }, []);
 
   const handleGetStyling = async () => {
     if (!searchQuery || !size || !bodyType) {
@@ -38,11 +46,11 @@ const StyleAssistant = () => {
     setResult(null);
 
     try {
-      // Find matching products in stock
+      // Find matching products in stock from database
       const matchingProducts = products.filter(product => 
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.category.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 3);
+      ).slice(0, 5);
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/style-assistant`, {
         method: "POST",
@@ -54,7 +62,12 @@ const StyleAssistant = () => {
           searchQuery, 
           size, 
           bodyType,
-          availableProducts: matchingProducts.map(p => ({ name: p.name, price: p.price, size: p.size }))
+          availableProducts: matchingProducts.map(p => ({ 
+            name: p.name, 
+            price: p.price, 
+            size: p.size,
+            category: p.category 
+          }))
         }),
       });
 
