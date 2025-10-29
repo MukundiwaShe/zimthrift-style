@@ -47,10 +47,12 @@ const StyleAssistant = () => {
 
     try {
       // Find matching products in stock from database
-      const matchingProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 5);
+      // Split search query into individual words for better matching
+      const searchTerms = searchQuery.toLowerCase().split(' ').filter(term => term.length > 2);
+      const matchingProducts = products.filter(product => {
+        const productText = `${product.name} ${product.category}`.toLowerCase();
+        return searchTerms.some(term => productText.includes(term));
+      }).slice(0, 5);
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/style-assistant`, {
         method: "POST",
