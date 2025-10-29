@@ -6,6 +6,10 @@ const MannequinModel = ({ bodyType }: { bodyType: string }) => {
   // Simple geometric shapes to represent a mannequin
   const getBodyScale = () => {
     switch (bodyType.toLowerCase()) {
+      case "babies":
+        return [0.6, 1.0, 0.5];
+      case "kids":
+        return [0.7, 1.2, 0.55];
       case "petite":
         return [0.8, 1.4, 0.6];
       case "athletic":

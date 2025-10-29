@@ -151,6 +151,8 @@ const StyleAssistant = () => {
                 <SelectValue placeholder="Select body type" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="babies">Babies</SelectItem>
+                <SelectItem value="kids">Kids</SelectItem>
                 <SelectItem value="petite">Petite</SelectItem>
                 <SelectItem value="average">Average</SelectItem>
                 <SelectItem value="athletic">Athletic</SelectItem>
