@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 interface Product {
   id: string;
@@ -199,8 +201,24 @@ const Products = () => {
             </div>
 
             {loading ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">Loading products...</p>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Card key={index} className="overflow-hidden">
+                    <Skeleton className="h-64 w-full rounded-none" />
+                    <CardContent className="p-4 space-y-3">
+                      <Skeleton className="h-5 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                      <div className="flex gap-2">
+                        <Skeleton className="h-5 w-16" />
+                        <Skeleton className="h-5 w-12" />
+                      </div>
+                    </CardContent>
+                    <CardFooter className="p-4 pt-0 flex gap-2">
+                      <Skeleton className="h-10 flex-1" />
+                      <Skeleton className="h-10 w-10" />
+                    </CardFooter>
+                  </Card>
+                ))}
               </div>
             ) : filteredProducts.length === 0 ? (
               <div className="text-center py-12">
