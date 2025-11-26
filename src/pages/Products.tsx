@@ -31,7 +31,7 @@ const Products = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const categoryParam = searchParams.get("category") || "";
-  const [priceRange, setPriceRange] = useState([1, 50]);
+  const [priceRange, setPriceRange] = useState([1, 15]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -133,7 +133,7 @@ const Products = () => {
                 </h3>
                 <Slider
                   min={1}
-                  max={50}
+                  max={15}
                   step={1}
                   value={priceRange}
                   onValueChange={setPriceRange}
