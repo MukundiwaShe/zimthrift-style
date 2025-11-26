@@ -32,6 +32,9 @@ const Products = () => {
   const searchQuery = searchParams.get("search") || "";
   const categoryParam = searchParams.get("category") || "";
   const [priceRange, setPriceRange] = useState([1, 15]);
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam || "all");
+  const [selectedCondition, setSelectedCondition] = useState("all");
+  const [selectedSize, setSelectedSize] = useState("all");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,14 +57,20 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [categoryParam]);
+
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
     
     // Filter by category
-    if (categoryParam) {
+    if (selectedCategory && selectedCategory !== "all") {
       filtered = filtered.filter((product) =>
-        product.category.toLowerCase() === categoryParam.toLowerCase()
+        product.category.toLowerCase() === selectedCategory.toLowerCase()
       );
     }
     
@@ -73,8 +82,34 @@ const Products = () => {
       );
     }
     
+    // Filter by price range
+    filtered = filtered.filter((product) =>
+      product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
+    
+    // Filter by condition
+    if (selectedCondition && selectedCondition !== "all") {
+      filtered = filtered.filter((product) =>
+        product.condition.toLowerCase() === selectedCondition.toLowerCase()
+      );
+    }
+    
+    // Filter by size
+    if (selectedSize && selectedSize !== "all") {
+      filtered = filtered.filter((product) =>
+        product.size.toLowerCase() === selectedSize.toLowerCase()
+      );
+    }
+    
     return filtered;
-  }, [searchQuery, categoryParam, products]);
+  }, [searchQuery, selectedCategory, products, priceRange, selectedCondition, selectedSize]);
+
+  const handleResetFilters = () => {
+    setSelectedCategory("all");
+    setSelectedCondition("all");
+    setSelectedSize("all");
+    setPriceRange([1, 15]);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,15 +122,15 @@ const Products = () => {
             <h1 className="text-4xl font-bold text-foreground mb-2">
               {searchQuery 
                 ? `Search Results for "${searchQuery}"` 
-                : categoryParam 
-                  ? `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}'s Fashion`
+                : selectedCategory && selectedCategory !== "all"
+                  ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}'s Fashion`
                   : "All Products"
               }
             </h1>
             <p className="text-muted-foreground">
-              {searchQuery || categoryParam
+              {searchQuery || selectedCategory !== "all"
                 ? `Found ${filteredProducts.length} items`
-                : "Browse our collection of 120+ quality preloved fashion items"
+                : "Browse our collection of quality preloved fashion items"
               }
             </p>
           </div>
@@ -111,7 +146,7 @@ const Products = () => {
               {/* Category Filter */}
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-foreground mb-3">Category</h3>
-                <Select>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                   <SelectTrigger>
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
@@ -144,15 +179,15 @@ const Products = () => {
               {/* Condition Filter */}
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-foreground mb-3">Condition</h3>
-                <Select>
+                <Select value={selectedCondition} onValueChange={setSelectedCondition}>
                   <SelectTrigger>
                     <SelectValue placeholder="All Conditions" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Conditions</SelectItem>
-                    <SelectItem value="new">Like New</SelectItem>
-                    <SelectItem value="good">Gently Used</SelectItem>
-                    <SelectItem value="fair">Good</SelectItem>
+                    <SelectItem value="Like New">Like New</SelectItem>
+                    <SelectItem value="Gently Used">Gently Used</SelectItem>
+                    <SelectItem value="Good">Good</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -160,22 +195,29 @@ const Products = () => {
               {/* Size Filter */}
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-foreground mb-3">Size</h3>
-                <Select>
+                <Select value={selectedSize} onValueChange={setSelectedSize}>
                   <SelectTrigger>
                     <SelectValue placeholder="All Sizes" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Sizes</SelectItem>
-                    <SelectItem value="xs">XS</SelectItem>
-                    <SelectItem value="s">S</SelectItem>
-                    <SelectItem value="m">M</SelectItem>
-                    <SelectItem value="l">L</SelectItem>
-                    <SelectItem value="xl">XL</SelectItem>
+                    <SelectItem value="XS">XS</SelectItem>
+                    <SelectItem value="S">S</SelectItem>
+                    <SelectItem value="M">M</SelectItem>
+                    <SelectItem value="L">L</SelectItem>
+                    <SelectItem value="XL">XL</SelectItem>
+                    <SelectItem value="7">7</SelectItem>
+                    <SelectItem value="7.5">7.5</SelectItem>
+                    <SelectItem value="8">8</SelectItem>
+                    <SelectItem value="8.5">8.5</SelectItem>
+                    <SelectItem value="9">9</SelectItem>
+                    <SelectItem value="9.5">9.5</SelectItem>
+                    <SelectItem value="10">10</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <Button className="w-full" variant="outline">
+              <Button className="w-full" variant="outline" onClick={handleResetFilters}>
                 Reset Filters
               </Button>
             </div>
