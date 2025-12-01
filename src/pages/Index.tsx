@@ -94,11 +94,9 @@ const Index = () => {
 
       {/* Featured Products */}
       <section className="container mx-auto px-4 py-16 bg-muted/20">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-bold text-foreground mb-2">Trending Now</h2>
-            <p className="text-muted-foreground">Hot picks this week</p>
-          </div>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-foreground mb-2">Trending Now</h2>
+          <p className="text-muted-foreground mb-4">Hot picks this week</p>
           <Link to="/products">
             <Button variant="outline">View All</Button>
           </Link>

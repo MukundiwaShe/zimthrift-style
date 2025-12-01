@@ -15,16 +15,16 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 to-foreground/40" />
       </div>
 
-      {/* Content */}
+      {/* Content - Centered */}
       <div className="container relative mx-auto px-4">
-        <div className="max-w-2xl space-y-6">
+        <div className="max-w-2xl mx-auto text-center space-y-6">
           <h1 className="text-5xl font-bold leading-tight text-background sm:text-6xl">
             Thrift smart, look fab
           </h1>
           <p className="text-xl text-background/90">
             No need to go to Mbare Mupedzanhamo and spend all day looking for cheap, affordable clothing. We've got you covered! Quality preloved fashion from just $1 USD.
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/products">
               <Button variant="hero" size="lg">
                 Shop Now
@@ -36,7 +36,7 @@ const Hero = () => {
               </Button>
             </Link>
           </div>
-          <div className="flex items-center gap-8 pt-4">
+          <div className="flex items-center justify-center gap-8 pt-4">
             <div className="flex flex-col">
               <span className="text-3xl font-bold text-background">500+</span>
               <span className="text-sm text-background/80">Items Available</span>
